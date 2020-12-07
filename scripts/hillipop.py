@@ -73,7 +73,8 @@ class Hillipop(_InstallableLikelihood):
 
         # Inverted Covariance matrix
         self.invkll = self._read_invcovmatrix()
-
+        self.binning_rte = np.loadtxt(os.path.join(self.data_folder,
+                                      self.binning_rte_file))
         # Foregrounds
         self.fgs = []  # list of foregrounds per mode [TT,EE,TE,ET]
         # Init foregrounds TT
@@ -240,7 +241,7 @@ class Hillipop(_InstallableLikelihood):
         acl = np.asarray(cl)
         xl = []
 
-        binning = np.loadtxt(os.path.join(self.data_folder, self.binning_rte_file))
+        binning = self.binning_rte
         for xf in range(self.nxfreq):
 
             lmin = self.lmins[mode][self.xspec2xfreq.index(xf)]
@@ -365,7 +366,7 @@ class Hillipop(_InstallableLikelihood):
             Xl += self._select_spectra(Rl / Wl, mode=2)
 
         Xl = np.array(Xl)
-        
+
         chi2 = Xl.dot(self.invkll).dot(Xl)
 
         return -0.5 * chi2
